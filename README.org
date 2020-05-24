@@ -1,3 +1,5 @@
 #+TITLE: akku
 
 Akku is a program for tracking mental health. The name has a personal meaning.
+
+Akku takes care of you.
