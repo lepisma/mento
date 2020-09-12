@@ -6,7 +6,7 @@ from typing import List
 @dataclass
 class Tracker:
     name: str
-    value: float = None
+    value: int = None
 
 
 @dataclass
@@ -22,7 +22,8 @@ class Context:
 @dataclass
 class Entry:
     body: str
-    time: datetime.datetime
+    date: datetime.date
+    time: datetime.time = None
     trackers: List[Tracker] = None
     people: List[Person] = None
     contexts: List[Context] = None
