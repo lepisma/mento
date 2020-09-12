@@ -3,3 +3,6 @@
 Akku is a program for tracking mental health. The name has a personal meaning.
 
 Akku takes care of you.
+
+As of now we only have an input mechanism to log entries in org files with a
+format similar to [[https://github.com/open-nomie/nomie][nomie]].
