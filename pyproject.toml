@@ -10,6 +10,7 @@ docopt = "^0.6.2"
 tqdm = "^4.48.2"
 orgparse = "^0.1.4"
 calmap = "^0.0.8"
+python-gnupg = "^0.4.6"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.0.2"

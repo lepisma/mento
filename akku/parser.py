@@ -4,7 +4,9 @@ import re
 from glob import glob
 from typing import List, Optional
 
+import gnupg
 import orgparse
+from tqdm import tqdm
 
 from akku.types import Context, Entry, Person, Tracker
 
@@ -148,13 +150,63 @@ def parse_list_journal(filepath: str) -> List[Entry]:
     return entries
 
 
-def parse_org_journal(directory: str) -> List[Entry]:
-    files = glob(os.path.join(directory, "*"))
+def parse_org_journal_body(text: str, date: datetime.date, passphrase: str) -> List[Entry]:
+    root = orgparse.loads(text)
 
-    for f in files:
-        match = re.match(r"(\d{4})(\d{2})(\d{2})", f)
-        if not match:
+    gpg = gnupg.GPG()
+
+    entries = []
+    for node in root[1:]:
+        dec = gpg.decrypt(node.body, passphrase=passphrase)
+        if not dec.ok:
+            print("Error in decrypting")
             continue
-        print(match.groups())
+        sub_root = orgparse.loads(str(dec))
+        for n in sub_root[1:]:
+            splits = n.heading.split(" ", 1)
+            time_s = splits[0]
 
-    return []
+            h, m = time_s.split(":")
+            time = datetime.time(int(h), int(m))
+
+            if len(splits) == 2:
+                body = splits[1] + "\n" + n.body
+            else:
+                body = n.body
+
+            entries.append(Entry(
+                body=body,
+                date=date,
+                time=time,
+                trackers=parse_trackers(body),
+                people=parse_people(body),
+                contexts=parse_contexts(body)
+            ))
+
+    return entries
+
+
+def parse_org_journal_file(filepath: str, passphrase: str) -> List[Entry]:
+    bname = os.path.basename(filepath)
+    match = re.match(r"(\d{4})(\d{2})(\d{2})", bname)
+
+    if not match:
+        return []
+
+    year_s, month_s, day_s = match.groups()
+    date = datetime.date(int(year_s), int(month_s), int(day_s))
+
+    with open(filepath) as fp:
+        body = fp.read()
+
+    return parse_org_journal_body(body, date, passphrase)
+
+
+def parse_org_journal(directory: str, passphrase: str) -> List[Entry]:
+    files = glob(os.path.join(os.path.expanduser(directory), "*"))
+
+    entries = []
+    for f in tqdm(files):
+        entries.extend(parse_org_journal_file(f, passphrase))
+
+    return entries

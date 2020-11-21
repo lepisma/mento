@@ -11,6 +11,8 @@ Options:
   --org-list-file=<org-list-file>       File with list entry items.
 """
 
+import getpass
+
 from docopt import docopt
 
 from akku import __version__
@@ -27,12 +29,12 @@ def main():
             entries.extend(parse_orgzly(args["--orgzly-file"]))
 
         if args["--org-journal-dir"]:
-            entries.extend(parse_org_journal(args["--org-journal-dir"]))
+            passphrase = getpass.getpass()
+            entries.extend(parse_org_journal(args["--org-journal-dir"], passphrase))
 
         if args["--org-list-file"]:
             entries.extend(parse_list_journal(args["--org-list-file"]))
 
-        print(entries)
-        print(len(entries))
+        print(entries[-1])
     else:
         raise RuntimeError("Need at least one source to work on")
