@@ -13,7 +13,6 @@ Options:
 
 from docopt import docopt
 
-import akku.viz as viz
 from akku import __version__
 from akku.parser import parse_list_journal, parse_org_journal, parse_orgzly
 
@@ -33,6 +32,7 @@ def main():
         if args["--org-list-file"]:
             entries.extend(parse_list_journal(args["--org-list-file"]))
 
-        viz.plot_entries(entries)
+        print(entries)
+        print(len(entries))
     else:
         raise RuntimeError("Need at least one source to work on")

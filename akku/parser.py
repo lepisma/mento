@@ -1,7 +1,11 @@
+import datetime
+import os
 import re
-from typing import List
+from glob import glob
+from typing import List, Optional
 
 import orgparse
+
 from akku.types import Context, Entry, Person, Tracker
 
 
@@ -80,3 +84,77 @@ def parse_orgzly(filepath: str) -> List[Entry]:
             valid_nodes.append(n)
 
     return [parse_orgzly_node(n) for n in valid_nodes]
+
+
+def parse_list_journal_entry(text: str) -> Optional[Entry]:
+    text = re.sub(r"$(\+|\-) ?", "", text).strip()
+
+    dt_i = text.index("]")
+    dt_string = text[:dt_i + 1]
+    body = text[dt_i + 1:]
+
+    dts = orgparse.date.OrgDate.list_from_str(dt_string)
+
+    if not dts:
+        return None
+
+    dt = dts[0].start
+    if isinstance(dt, datetime.datetime):
+        date = dt.date()
+        time = dt.time()
+    else:
+        date = dt
+        time = None
+
+    return Entry(
+        body=body,
+        date=date,
+        time=time,
+        trackers=parse_trackers(body),
+        people=parse_people(body),
+        contexts=parse_contexts(body)
+    )
+
+
+def parse_list_journal_heading(text: str) -> List[Entry]:
+    entry_texts = []
+
+    accum = []
+    for line in text.splitlines():
+        if re.match(r"(\+|\-) \[", line, flags=re.I):
+            # New entry
+            if accum:
+                entry_texts.append("\n".join(accum))
+                accum = []
+        accum.append(line)
+
+    entries = [parse_list_journal_entry(t) for t in entry_texts]
+    return [e for e in entries if e]
+
+
+def parse_list_journal(filepath: str) -> List[Entry]:
+    """
+    Lists are kept directly under headings.
+    """
+
+    root = orgparse.load(filepath)
+    entries = []
+
+    for node in root[1:]:
+        # TODO: Remove this restriction
+        if node.heading == "Log":
+            entries.extend(parse_list_journal_heading(node.body))
+
+    return entries
+
+
+def parse_org_journal(directory: str) -> List[Entry]:
+    files = glob(os.path.join(directory, "*"))
+
+    for f in files:
+        match = re.match(r"(\d{4})(\d{2})(\d{2})", f)
+        if not match:
+            continue
+        print(match.groups())
+
+    return []
