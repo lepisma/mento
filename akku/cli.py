@@ -24,8 +24,8 @@ def main():
     if args["--orgzly-file"] or args["--org-journal-dir"] or args["--org-list-file"]:
         entries = []
 
-        if args["--orgzle-file"]:
-            entries.extend(parse_orgzly(args["--orgzle-file"]))
+        if args["--orgzly-file"]:
+            entries.extend(parse_orgzly(args["--orgzly-file"]))
 
         if args["--org-journal-dir"]:
             entries.extend(parse_org_journal(args["--org-journal-dir"]))
@@ -34,3 +34,5 @@ def main():
             entries.extend(parse_list_journal(args["--org-list-file"]))
 
         viz.plot_entries(entries)
+    else:
+        raise RuntimeError("Need at least one source to work on")
