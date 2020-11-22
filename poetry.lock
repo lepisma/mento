@@ -164,6 +164,17 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
+name = "pydash"
+version = "4.9.0"
+description = "The kitchen sink of Python utility libraries for doing \"stuff\" in a functional way. Based on the Lo-Dash Javascript library."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+dev = ["coverage", "flake8", "mock", "pylint", "pytest", "pytest-cov", "sphinx", "sphinx-rtd-theme", "tox", "twine", "wheel"]
+
+[[package]]
 name = "pyparsing"
 version = "2.4.7"
 description = "Python parsing module"
@@ -250,7 +261,7 @@ dev = ["py-make (>=0.1.0)", "twine", "argopt", "pydoc-markdown", "wheel"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "61901644eeda215c51fad7fed12ffe0335c5241bade0f028058c2cc20a43bf54"
+content-hash = "6f744c87b14ffac3fdf0160e3ee86bc3d12911452c1cd448563f4865f3950a49"
 
 [metadata.files]
 atomicwrites = [
@@ -448,6 +459,10 @@ pluggy = [
 py = [
     {file = "py-1.9.0-py2.py3-none-any.whl", hash = "sha256:366389d1db726cd2fcfc79732e75410e5fe4d31db13692115529d34069a043c2"},
     {file = "py-1.9.0.tar.gz", hash = "sha256:9ca6883ce56b4e8da7e79ac18787889fa5206c79dcc67fb065376cd2fe03f342"},
+]
+pydash = [
+    {file = "pydash-4.9.0-py2.py3-none-any.whl", hash = "sha256:a743212a586f92980ee093fdec4a984cb97d38fe6d5dadd3c4eb1de57bc5fb4a"},
+    {file = "pydash-4.9.0.tar.gz", hash = "sha256:44f7217669511901bf234628231a8d8fccd89a53c23b54c35759ee0838a67ba7"},
 ]
 pyparsing = [
     {file = "pyparsing-2.4.7-py2.py3-none-any.whl", hash = "sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b"},
