@@ -9,7 +9,7 @@ from akku.types import Entry
 
 
 def summarize_number_of_entries(entries: List[Entry]):
-    current_year = datetime.datetime.now().year()
+    current_year = datetime.datetime.now().year
     filtered = [e for e in entries if e.date.year == current_year]
 
     df = []
@@ -28,7 +28,7 @@ def summarize_number_of_mentions(entries: List[Entry], name: str):
     match will give more real stats for older dates.
     """
 
-    current_year = datetime.datetime.now().year()
+    current_year = datetime.datetime.now().year
     filtered = [e for e in entries if e.date.year == current_year]
 
     df = []
@@ -46,7 +46,7 @@ def summarize_number_of_mentions(entries: List[Entry], name: str):
 
 
 def summarize_discrete_moods(entries: List[Entry]):
-    current_year = datetime.datetime.now().year()
+    current_year = datetime.datetime.now().year
     filtered = [e for e in entries if e.date.year == current_year]
 
     df = []

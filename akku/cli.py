@@ -40,7 +40,8 @@ def main():
         df = stats.summarize_discrete_moods(entries).merge(
             stats.summarize_number_of_entries(entries),
             how="outer",
-            on="day"
+            on="day",
+            suffixes=["mood", "n"]
         )
         df.to_csv(args["--output-file"], index=None)
     else:
