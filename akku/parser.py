@@ -163,6 +163,10 @@ def parse_org_journal_body(text: str, date: datetime.date, passphrase: str) -> L
             continue
         sub_root = orgparse.loads(str(dec))
         for n in sub_root[1:]:
+            # Ignoring other internal headings
+            if n.level != 2:
+                continue
+
             splits = n.heading.split(" ", 1)
             time_s = splits[0]
 
