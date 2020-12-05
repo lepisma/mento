@@ -1,3 +1,4 @@
+import concurrent.futures
 import datetime
 import os
 import re
@@ -6,7 +7,6 @@ from typing import List, Optional
 
 import gnupg
 import orgparse
-from tqdm import tqdm
 
 from akku.types import Context, Entry, Person, Tracker
 
@@ -210,7 +210,11 @@ def parse_org_journal(directory: str, passphrase: str) -> List[Entry]:
     files = glob(os.path.join(os.path.expanduser(directory), "*"))
 
     entries = []
-    for f in tqdm(files):
-        entries.extend(parse_org_journal_file(f, passphrase))
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        futures = [executor.submit(parse_org_journal_file, f, passphrase) for f in files]
+
+    for ft in concurrent.futures.as_completed(futures):
+        entries.extend(ft.result())
 
     return entries
