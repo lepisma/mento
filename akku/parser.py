@@ -121,7 +121,7 @@ def parse_list_journal_entry(text: str) -> Optional[Entry]:
 def parse_list_journal_heading(text: str) -> List[Entry]:
     entry_texts = []
 
-    accum = []
+    accum: List[str] = []
     for line in text.splitlines():
         if re.match(r"(\+|\-) \[", line, flags=re.I):
             # New entry
