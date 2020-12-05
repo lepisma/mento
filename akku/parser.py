@@ -103,7 +103,7 @@ def parse_list_journal_entry(text: str) -> Optional[Entry]:
     dt = dts[0].start
     if isinstance(dt, datetime.datetime):
         date = dt.date()
-        time = dt.time()
+        time: Optional[datetime.time] = dt.time()
     else:
         date = dt
         time = None

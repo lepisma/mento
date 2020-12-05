@@ -1,12 +1,12 @@
 import datetime
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 
 
 @dataclass
 class Tracker:
     name: str
-    value: int = None
+    value: Optional[int] = None
 
 
 @dataclass
@@ -23,7 +23,7 @@ class Context:
 class Entry:
     body: str
     date: datetime.date
-    time: datetime.time = None
-    trackers: List[Tracker] = None
-    people: List[Person] = None
-    contexts: List[Context] = None
+    time: Optional[datetime.time] = None
+    trackers: Optional[List[Tracker]] = None
+    people: Optional[List[Person]] = None
+    contexts: Optional[List[Context]] = None
