@@ -1,6 +1,7 @@
 import datetime
+import math
 import statistics
-from typing import List
+from typing import Dict, List
 
 import pandas as pd
 from pydash import py_
@@ -45,18 +46,13 @@ def summarize_number_of_mentions(entries: List[Entry], name: str):
     return pd.DataFrame(df)
 
 
-def summarize_discrete_moods(entries: List[Entry]):
-    current_year = datetime.datetime.now().year
-    filtered = [e for e in entries if e.date.year == current_year]
-
-    df = []
-    for date, entries in py_.group_by(filtered, lambda e: e.date).items():
+def discrete_moods(entries: List[Entry]) -> Dict[datetime.date, int]:
+    output = {}
+    for date, entries in py_.group_by(entries, lambda e: e.date).items():
         trackers = py_.flatten([e.trackers for e in entries])
         mood_trackers = [t for t in trackers if t.name == "mood"]
-        if mood_trackers:
-            df.append({
-                "day": date.timetuple().tm_yday,
-                "value": round(statistics.mean([t.value for t in mood_trackers]))
-            })
 
-    return pd.DataFrame(df)
+        if mood_trackers:
+            output[date] = round(statistics.mean([t.value for t in mood_trackers]))
+
+    return output
