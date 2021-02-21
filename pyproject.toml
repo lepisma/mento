@@ -13,6 +13,8 @@ calmap = "^0.0.8"
 python-gnupg = "^0.4.6"
 pydash = "^4.9.0"
 PyQt5 = "^5.15.2"
+dominate = "^2.6.0"
+org-python = "^0.3.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.0.2"

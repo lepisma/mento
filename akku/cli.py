@@ -19,16 +19,48 @@ import getpass
 import pickle
 import sys
 
+import dominate.tags as T
+import dominate.util
 import matplotlib.pyplot as plt
+import orgpython
 from docopt import docopt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
-from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QLabel, QPushButton,
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QSplitter, QTextEdit,
                              QWidget)
 
 import akku.stats as stats
 import akku.viz as viz
 from akku import __version__
 from akku.parser import parse_list_journal, parse_org_journal, parse_orgzly
+from akku.types import Entry
+
+
+def entry_dt(entry: Entry) -> datetime.datetime:
+    return datetime.datetime.combine(entry.date, entry.time or datetime.time.min)
+
+
+def format_entry_dt(entry) -> str:
+    if entry.time:
+        return datetime.datetime.combine(entry.date, entry.time).strftime("%b %d %Y %H:%M:%S")
+    else:
+        return entry.date.strftime("%b %d %Y")
+
+
+def format_entry_as_html(entry) -> str:
+    div = T.div(cls="entry", style="font-family: Lora")
+
+    div += T.div(format_entry_dt(entry), cls="entry-date", style="color: #999999; font-size: 13px;")
+    div += T.br()
+
+    body = dominate.util.raw(orgpython.to_html(entry.body.strip()))
+    div += T.div(body, cls="entry-body", style="color: #555555; font-size: 13px;")
+
+    div += T.br()
+    div += T.br()
+    div += T.br()
+
+    return div.render()
 
 
 def main():
@@ -57,7 +89,7 @@ def main():
         app = QApplication([])
 
         with open(args["--output-file"], "rb") as fp:
-            entries = pickle.load(fp)
+            entries = sorted(pickle.load(fp), key=entry_dt)
 
         cmap = plt.get_cmap("RdBu")
 
@@ -74,11 +106,23 @@ def main():
 
         window = QWidget()
         window.setWindowTitle("akku")
+        window.setStyleSheet("background-color: white;")
 
         layout = QHBoxLayout()
         canvas = FigureCanvasQTAgg(fig)
-        layout.addWidget(canvas)
 
+        text_pane = QTextEdit()
+        text_pane.setReadOnly(True)
+        text_pane.setStyleSheet("QTextEdit { padding:10; border: none; }")
+
+        splitter = QSplitter(Qt.Horizontal)
+        splitter.addWidget(canvas)
+        splitter.addWidget(text_pane)
+
+        for entry in entries:
+            text_pane.textCursor().insertHtml(format_entry_as_html(entry))
+
+        layout.addWidget(splitter)
         window.setLayout(layout)
         window.show()
 
