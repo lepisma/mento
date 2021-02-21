@@ -1,11 +1,22 @@
 import calendar
 import datetime
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 import matplotlib.colors
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
+
+
+def color_transform(bounds: Tuple):
+    lb, ub = bounds
+
+    if lb < 0:
+        cmap = plt.get_cmap("RdBu")
+    else:
+        cmap = plt.get_cmap("Purples")
+
+    return lambda v: cmap((v - lb) / (ub - lb))
 
 
 def plot_year(year: int, colors: Dict[datetime.date, str]) -> plt.Figure:

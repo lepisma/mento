@@ -4,7 +4,7 @@ Akku
 Usage:
   akku parse [--orgzly-file=<orgzly-file>] [--org-journal-dir=<org-journal-dir>]
     [--org-list-file=<org-list-file>] [--output-file=<output-file>]
-  akku plot (polarity|mood|count) <entries-file> [--year=<year>]
+  akku plot (polarity|mood|count|mentions) <entries-file> [--year=<year>]
 
 Options:
   --orgzly-file=<orgzly-file>           Orgzly style log file.
@@ -20,7 +20,6 @@ import pickle
 import sys
 from typing import List
 
-import matplotlib.pyplot as plt
 from docopt import docopt
 from PyQt5.QtWidgets import QApplication
 
@@ -66,22 +65,29 @@ def main():
         with open(args["--output-file"], "rb") as fp:
             entries = sorted(pickle.load(fp), key=entry_dt)
 
-        cmap = plt.get_cmap("RdBu")
-
         colors = {}
         if args["polarity"]:
+            ct = viz.color_transform((-1, 1))
             for dt, v in stats.aggregate_by_date(entries, stats.aggregate_mean_polarity).items():
-                colors[dt] = cmap((v + 1) / 2)
+                colors[dt] = ct(v)
+
         elif args["mood"]:
+            ct = viz.color_transform((-2, 2))
             for dt, v in stats.aggregate_by_date(entries, stats.aggregate_mean_mood).items():
                 if v is not None:
-                    colors[dt] = cmap((v + 2) / 4)
+                    colors[dt] = ct(v)
+
         elif args["count"]:
             aggregated = stats.aggregate_by_date(entries, len)
-            max_count = max(aggregated.values())
-            cmap = plt.get_cmap("Purples")
+            ct = viz.color_transform((0, max(aggregated.values())))
             for dt, v in aggregated.items():
-                colors[dt] = cmap(v / max_count)
+                colors[dt] = ct(v)
+
+        elif args["mentions"]:
+            aggregated = stats.aggregate_by_date(entries, stats.aggregate_mentions)
+            ct = viz.color_transform((0, max(aggregated.values())))
+            for dt, v in aggregated.items():
+                colors[dt] = ct(v)
 
         if args["--year"]:
             year = int(args["--year"])

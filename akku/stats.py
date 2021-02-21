@@ -21,11 +21,8 @@ def aggregate_mean_polarity(entries: List[Entry]) -> float:
     return statistics.mean([TextBlob(ent.body).sentiment.polarity for ent in entries])
 
 
-def aggregate_number_of_mentions(entries: List[Entry], name: str) -> int:
-    people = py_.flatten([e.people for e in entries])
-    mentions = [p for p in people if p.name == name]
-
-    return len(mentions)
+def aggregate_mentions(entries: List[Entry]) -> int:
+    return len(py_.flatten([e.people for e in entries]))
 
 
 def aggregate_by_date(entries: List[Entry], aggregate_fn: Callable[[List[Entry]], Any]) -> Dict[datetime.date, Any]:
