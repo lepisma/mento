@@ -16,6 +16,7 @@ Options:
 import getpass
 import pickle
 
+import matplotlib.pyplot as plt
 from docopt import docopt
 
 import akku.stats as stats
@@ -50,16 +51,10 @@ def main():
         with open(args["--output-file"], "rb") as fp:
             entries = pickle.load(fp)
 
-        cmap = {
-            2: "#5eaaa8",
-            1: "#75cfb8",
-            0: "#dddddd",
-            -1: "#f0a500",
-            -2: "#e40017"
-        }
+        cmap = plt.get_cmap("RdBu")
 
         colors = {}
-        for dt, v in stats.discrete_moods(entries).items():
-            colors[dt] = cmap[v]
+        for dt, v in stats.aggregate_mood(entries).items():
+            colors[dt] = cmap((v + 2) / 4)
 
         plot_year(2021, colors)
