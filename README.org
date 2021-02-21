@@ -1,5 +1,7 @@
 #+TITLE: akku
 
+[[https://img.shields.io/github/v/tag/lepisma/akku.svg?style=flat-square]]
+
 Akku is a program for tracking mental health. Here is the workflow:
 
 1. Log entries in [[https://orgmode.org/][Org Mode]] files with a format similar to [[https://github.com/open-nomie/nomie][nomie]].
