@@ -15,6 +15,7 @@ PyQt5 = "^5.15.2"
 dominate = "^2.6.0"
 org-python = "^0.3.2"
 matplotlib = "^3.3.4"
+textblob = "^0.15.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.0.2"

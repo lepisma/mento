@@ -3,6 +3,7 @@ import statistics
 from typing import Any, Callable, Dict, List, Optional
 
 from pydash import py_
+from textblob import TextBlob
 
 from akku.types import Entry
 
@@ -14,6 +15,10 @@ def aggregate_mean_mood(entries: List[Entry]) -> Optional[float]:
     if mood_trackers:
         return statistics.mean([t.value for t in mood_trackers])
     return None
+
+
+def aggregate_mean_polarity(entries: List[Entry]) -> float:
+    return statistics.mean([TextBlob(ent.body).sentiment.polarity for ent in entries])
 
 
 def aggregate_number_of_mentions(entries: List[Entry], name: str) -> int:

@@ -4,7 +4,7 @@ Akku
 Usage:
   akku parse [--orgzly-file=<orgzly-file>] [--org-journal-dir=<org-journal-dir>]
     [--org-list-file=<org-list-file>] [--output-file=<output-file>]
-  akku plot <entries-file> [--year=<year>]
+  akku plot (polarity|mood|count) <entries-file> [--year=<year>]
 
 Options:
   --orgzly-file=<orgzly-file>           Orgzly style log file.
@@ -94,9 +94,19 @@ def main():
         cmap = plt.get_cmap("RdBu")
 
         colors = {}
-        for dt, v in stats.aggregate_by_date(entries, stats.aggregate_mean_mood).items():
-            if v is not None:
-                colors[dt] = cmap((v + 2) / 4)
+        if args["polarity"]:
+            for dt, v in stats.aggregate_by_date(entries, stats.aggregate_mean_polarity).items():
+                colors[dt] = cmap((v + 1) / 2)
+        elif args["mood"]:
+            for dt, v in stats.aggregate_by_date(entries, stats.aggregate_mean_mood).items():
+                if v is not None:
+                    colors[dt] = cmap((v + 2) / 4)
+        elif args["count"]:
+            aggregated = stats.aggregate_by_date(entries, len)
+            max_count = max(aggregated.values())
+            cmap = plt.get_cmap("Purples")
+            for dt, v in aggregated.items():
+                colors[dt] = cmap(v / max_count)
 
         if args["--year"]:
             year = int(args["--year"])
