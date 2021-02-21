@@ -24,7 +24,7 @@ def parse_trackers(text: str) -> List[Tracker]:
 
         name = match.group(1)
         if match.group(3) is not None:
-            value = int(match.group(3))
+            value: Optional[int] = int(match.group(3))
         else:
             value = None
         trackers.append(Tracker(name, value))

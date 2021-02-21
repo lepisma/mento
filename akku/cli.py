@@ -4,15 +4,17 @@ Akku
 Usage:
   akku parse [--orgzly-file=<orgzly-file>] [--org-journal-dir=<org-journal-dir>]
     [--org-list-file=<org-list-file>] [--output-file=<output-file>]
-  akku plot <entries-file>
+  akku plot <entries-file> [--year=<year>]
 
 Options:
   --orgzly-file=<orgzly-file>           Orgzly style log file.
   --org-journal-dir=<org-journal-dir>   Org journal directory.
   --org-list-file=<org-list-file>       File with list entry items.
   --output-file=<output-file>           Output file to put parsed entries in [default: entries.pkl].
+  --year=<year>                         Year to plot.
 """
 
+import datetime
 import getpass
 import pickle
 
@@ -20,9 +22,9 @@ import matplotlib.pyplot as plt
 from docopt import docopt
 
 import akku.stats as stats
+import akku.viz as viz
 from akku import __version__
 from akku.parser import parse_list_journal, parse_org_journal, parse_orgzly
-from akku.viz import plot_year
 
 
 def main():
@@ -54,7 +56,12 @@ def main():
         cmap = plt.get_cmap("RdBu")
 
         colors = {}
-        for dt, v in stats.aggregate_mood(entries).items():
-            colors[dt] = cmap((v + 2) / 4)
+        for dt, v in stats.aggregate_by_date(entries, stats.aggregate_mean_mood).items():
+            if v is not None:
+                colors[dt] = cmap((v + 2) / 4)
 
-        plot_year(2021, colors)
+        if args["--year"]:
+            year = int(args["--year"])
+        else:
+            year = datetime.datetime.now().year
+        viz.plot_year(year, colors)
