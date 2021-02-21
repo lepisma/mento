@@ -102,14 +102,12 @@ class QWindow(QWidget):
     def __init__(self, entries):
         super().__init__()
         self.setWindowTitle("akku")
-        # self.setStyleSheet("background-color: white;")
 
         layout = QHBoxLayout()
         self.year = datetime.datetime.now().year
         self.plot_type = "mood"
 
         self.calendar = QCalendar(entries)
-        self.refresh_calendar()
 
         self.journal = QJournal()
         self.journal.render(entries)
@@ -147,6 +145,7 @@ class QWindow(QWidget):
 
         layout.addWidget(splitter)
         self.setLayout(layout)
+        self.refresh_calendar()
 
     def refresh_calendar(self):
         self.calendar.render(self.year, self.plot_type)
