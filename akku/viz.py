@@ -20,7 +20,7 @@ def plot_year(year: int, colors: Dict[datetime.date, str]):
         month = i + 1
         date_patches.extend(plot_month(axs[i // 3, i % 3], year, month, colors))
 
-    fig.suptitle(f"{year}", color="#999999", fontfamily="Lora", fontstyle="italic", fontsize="x-large", x=0.9, y=0.05, ha="right")
+    fig.suptitle(f"{year}", color="#999999", fontfamily="Lora", fontsize="xx-large", x=0.9, y=0.95, ha="right")
     plt.show()
 
 
@@ -50,9 +50,9 @@ def plot_month(ax: Axes, year: int, month: int, colors: Dict[datetime.date, str]
 
     padding = 0.0
     for i, day in enumerate(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]):
-        ax.text(i + 1.5, 8 + 0.3, day, ha="center", color="#aaaaaa", fontfamily="Lora", fontstyle="italic", fontsize="smaller")
+        ax.text(i + 1.5, 7 + 0.3, day, ha="center", color="#aaaaaa", fontfamily="Lora", fontsize="smaller")
 
-    ax.text(8 - padding, 1 + padding, calendar.month_name[month], ha="right", va="bottom", color="#777777", fontfamily="Lora", fontstyle="italic", fontsize="medium")
+    ax.text(8 - padding, 9 - padding, calendar.month_name[month], ha="right", va="top", color="#777777", fontfamily="Lora", fontstyle="italic", fontsize="medium")
 
     date_patches = []
 
@@ -63,7 +63,7 @@ def plot_month(ax: Axes, year: int, month: int, colors: Dict[datetime.date, str]
 
         weekday = dt.isoweekday()
         x_grid = 1 + (weekday % 7)
-        y_grid = 8 - row
+        y_grid = 7 - row
 
         x = x_grid + padding
         y = y_grid + padding
