@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "akku"
-version = "0.1.0"
+version = "0.2.0"
 description = "Personal tracker for mental health"
 authors = ["Abhinav Tushar <abhinav@lepisma.xyz>"]
 
