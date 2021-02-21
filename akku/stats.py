@@ -2,7 +2,6 @@ import datetime
 import statistics
 from typing import Any, Callable, Dict, List, Optional
 
-import pandas as pd
 from pydash import py_
 
 from akku.types import Entry
