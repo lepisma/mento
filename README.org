@@ -1,8 +1,11 @@
 #+TITLE: akku
 
-Akku is a program for tracking mental health. The name has a personal meaning.
+Akku is a program for tracking mental health. Here is the workflow:
 
-Akku takes care of you.
+1. Log entries in [[https://orgmode.org/][Org Mode]] files with a format similar to [[https://github.com/open-nomie/nomie][nomie]].
+2. Parse entries from various sources using ~akku parse ...~.
+3. Visualize statistics using ~akku plot ...~.
 
-As of now we only have an input mechanism to log entries in org files with a
-format similar to [[https://github.com/open-nomie/nomie][nomie]].
+Here is an example mood plot (tracked via ~#mood(<int>)~):
+
+[[file:./screens/mood-plot.png]]
