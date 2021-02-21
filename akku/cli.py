@@ -18,72 +18,47 @@ import datetime
 import getpass
 import pickle
 import sys
+from typing import List
 
-import dominate.tags as T
-import dominate.util
 import matplotlib.pyplot as plt
-import orgpython
 from docopt import docopt
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QSplitter, QTextEdit,
-                             QWidget)
+from PyQt5.QtWidgets import QApplication
 
 import akku.stats as stats
+import akku.ui as ui
 import akku.viz as viz
 from akku import __version__
 from akku.parser import parse_list_journal, parse_org_journal, parse_orgzly
 from akku.types import Entry
+from akku.util import entry_dt
 
 
-def entry_dt(entry: Entry) -> datetime.datetime:
-    return datetime.datetime.combine(entry.date, entry.time or datetime.time.min)
+def parse_entries(orgzly_file=None, org_journal_dir=None, org_list_file=None) -> List[Entry]:
+    if orgzly_file or org_journal_dir or org_list_file:
+        entries = []
 
+        if orgzly_file:
+            entries.extend(parse_orgzly(orgzly_file))
 
-def format_entry_dt(entry) -> str:
-    if entry.time:
-        return datetime.datetime.combine(entry.date, entry.time).strftime("%b %d %Y %H:%M:%S")
+        if org_journal_dir:
+            passphrase = getpass.getpass("Passphrase for Org Journal: ")
+            entries.extend(parse_org_journal(org_journal_dir, passphrase))
+
+        if org_list_file:
+            entries.extend(parse_list_journal(org_list_file))
+
+        return entries
     else:
-        return entry.date.strftime("%b %d %Y")
-
-
-def format_entry_as_html(entry) -> str:
-    div = T.div(cls="entry", style="font-family: Lora")
-
-    div += T.div(format_entry_dt(entry), cls="entry-date", style="color: #999999; font-size: 13px;")
-    div += T.br()
-
-    body = dominate.util.raw(orgpython.to_html(entry.body.strip()))
-    div += T.div(body, cls="entry-body", style="color: #555555; font-size: 13px;")
-
-    div += T.br()
-    div += T.br()
-    div += T.br()
-
-    return div.render()
+        raise RuntimeError("Need at least one source to work on")
 
 
 def main():
     args = docopt(__doc__, version=__version__)
 
     if args["parse"]:
-        if args["--orgzly-file"] or args["--org-journal-dir"] or args["--org-list-file"]:
-            entries = []
-
-            if args["--orgzly-file"]:
-                entries.extend(parse_orgzly(args["--orgzly-file"]))
-
-            if args["--org-journal-dir"]:
-                passphrase = getpass.getpass("Passphrase for Org Journal: ")
-                entries.extend(parse_org_journal(args["--org-journal-dir"], passphrase))
-
-            if args["--org-list-file"]:
-                entries.extend(parse_list_journal(args["--org-list-file"]))
-
-            with open(args["--output-file"], "wb") as fp:
-                pickle.dump(entries, fp)
-        else:
-            raise RuntimeError("Need at least one source to work on")
+        entries = parse_entries(args["--orgzly-file"], args["--org-journal-dir"], args["--org-list-file"])
+        with open(args["--output-file"], "wb") as fp:
+            pickle.dump(entries, fp)
 
     elif args["plot"]:
         app = QApplication([])
@@ -114,26 +89,7 @@ def main():
             year = datetime.datetime.now().year
         fig = viz.plot_year(year, colors)
 
-        window = QWidget()
-        window.setWindowTitle("akku")
-        window.setStyleSheet("background-color: white;")
-
-        layout = QHBoxLayout()
-        canvas = FigureCanvasQTAgg(fig)
-
-        text_pane = QTextEdit()
-        text_pane.setReadOnly(True)
-        text_pane.setStyleSheet("QTextEdit { padding:10; border: none; }")
-
-        splitter = QSplitter(Qt.Horizontal)
-        splitter.addWidget(canvas)
-        splitter.addWidget(text_pane)
-
-        for entry in entries:
-            text_pane.textCursor().insertHtml(format_entry_as_html(entry))
-
-        layout.addWidget(splitter)
-        window.setLayout(layout)
+        window = ui.QWindow(fig, entries)
         window.show()
 
         sys.exit(app.exec_())
