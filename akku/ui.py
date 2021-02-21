@@ -3,11 +3,15 @@ from typing import List
 
 import dominate.tags as T
 import dominate.util
+import matplotlib.pyplot as plt
+import numpy as np
 import orgpython
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QHBoxLayout, QSplitter, QTextEdit, QWidget
 
+import akku.stats as stats
+import akku.viz as viz
 from akku.types import Entry
 
 
@@ -48,24 +52,66 @@ class QJournal(QTextEdit):
             self.textCursor().insertHtml(self.format_entry(entry))
 
 
+class QCalendar(FigureCanvasQTAgg):
+    """
+    Calendar plotted using matplotlib.
+    """
+
+    def __init__(self, entries):
+        self.fig = plt.figure()
+        super().__init__(self.fig)
+        self.entries = entries
+
+    def render(self, year: int, plot_type: str, **kwargs):
+        self.fig.clear()
+
+        colors = {}
+        if plot_type == "polarity":
+            ct = viz.color_transform((-1, 1))
+            for dt, v in stats.aggregate_by_date(self.entries, stats.aggregate_mean_polarity).items():
+                colors[dt] = ct(v)
+
+        elif plot_type == "mood":
+            ct = viz.color_transform((-2, 2))
+            for dt, v in stats.aggregate_by_date(self.entries, stats.aggregate_mean_mood).items():
+                if v is not None:
+                    colors[dt] = ct(v)
+
+        elif plot_type == "count":
+            aggregated = stats.aggregate_by_date(self.entries, len)
+            ct = viz.color_transform((0, max(aggregated.values())))
+            for dt, v in aggregated.items():
+                colors[dt] = ct(v)
+
+        elif plot_type == "mentions":
+            aggregated = stats.aggregate_by_date(self.entries, stats.aggregate_mentions)
+            ct = viz.color_transform((0, max(aggregated.values())))
+            for dt, v in aggregated.items():
+                colors[dt] = ct(v)
+
+        viz.plot_year(self.fig, year, colors)
+
+
 class QWindow(QWidget):
     """
     Main app window
     """
 
-    def __init__(self, fig, entries):
+    def __init__(self, entries):
         super().__init__()
         self.setWindowTitle("akku")
         self.setStyleSheet("background-color: white;")
 
         layout = QHBoxLayout()
-        canvas = FigureCanvasQTAgg(fig)
+        self.calendar = QCalendar(entries)
+        year = datetime.datetime.now().year
+        self.calendar.render(year, "mood")
 
         self.journal = QJournal()
         self.journal.render(entries)
 
         splitter = QSplitter(Qt.Horizontal)
-        splitter.addWidget(canvas)
+        splitter.addWidget(self.calendar)
         splitter.addWidget(self.journal)
 
         layout.addWidget(splitter)

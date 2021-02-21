@@ -4,17 +4,15 @@ Akku
 Usage:
   akku parse [--orgzly-file=<orgzly-file>] [--org-journal-dir=<org-journal-dir>]
     [--org-list-file=<org-list-file>] [--output-file=<output-file>]
-  akku plot (polarity|mood|count|mentions) <entries-file> [--year=<year>]
+  akku <entries-file>
 
 Options:
   --orgzly-file=<orgzly-file>           Orgzly style log file.
   --org-journal-dir=<org-journal-dir>   Org journal directory.
   --org-list-file=<org-list-file>       File with list entry items.
   --output-file=<output-file>           Output file to put parsed entries in [default: entries.pkl].
-  --year=<year>                         Year to plot.
 """
 
-import datetime
 import getpass
 import pickle
 import sys
@@ -23,9 +21,7 @@ from typing import List
 from docopt import docopt
 from PyQt5.QtWidgets import QApplication
 
-import akku.stats as stats
 import akku.ui as ui
-import akku.viz as viz
 from akku import __version__
 from akku.parser import parse_list_journal, parse_org_journal, parse_orgzly
 from akku.types import Entry
@@ -59,43 +55,13 @@ def main():
         with open(args["--output-file"], "wb") as fp:
             pickle.dump(entries, fp)
 
-    elif args["plot"]:
+    else:
         app = QApplication([])
 
         with open(args["--output-file"], "rb") as fp:
             entries = sorted(pickle.load(fp), key=entry_dt)
 
-        colors = {}
-        if args["polarity"]:
-            ct = viz.color_transform((-1, 1))
-            for dt, v in stats.aggregate_by_date(entries, stats.aggregate_mean_polarity).items():
-                colors[dt] = ct(v)
-
-        elif args["mood"]:
-            ct = viz.color_transform((-2, 2))
-            for dt, v in stats.aggregate_by_date(entries, stats.aggregate_mean_mood).items():
-                if v is not None:
-                    colors[dt] = ct(v)
-
-        elif args["count"]:
-            aggregated = stats.aggregate_by_date(entries, len)
-            ct = viz.color_transform((0, max(aggregated.values())))
-            for dt, v in aggregated.items():
-                colors[dt] = ct(v)
-
-        elif args["mentions"]:
-            aggregated = stats.aggregate_by_date(entries, stats.aggregate_mentions)
-            ct = viz.color_transform((0, max(aggregated.values())))
-            for dt, v in aggregated.items():
-                colors[dt] = ct(v)
-
-        if args["--year"]:
-            year = int(args["--year"])
-        else:
-            year = datetime.datetime.now().year
-        fig = viz.plot_year(year, colors)
-
-        window = ui.QWindow(fig, entries)
+        window = ui.QWindow(entries)
         window.show()
 
         sys.exit(app.exec_())

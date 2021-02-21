@@ -1,6 +1,6 @@
 import calendar
 import datetime
-from typing import Dict, List, Tuple
+from typing import Any, Callable, Dict, List, Tuple
 
 import matplotlib.colors
 import matplotlib.patches as patches
@@ -8,7 +8,11 @@ import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 
 
-def color_transform(bounds: Tuple):
+def color_transform(bounds: Tuple[Any, Any]) -> Callable[[Any], str]:
+    """
+    Make a transforming function that takes data from bounds to a color scale.
+    """
+
     lb, ub = bounds
 
     if lb < 0:
@@ -19,20 +23,19 @@ def color_transform(bounds: Tuple):
     return lambda v: cmap((v - lb) / (ub - lb))
 
 
-def plot_year(year: int, colors: Dict[datetime.date, str]) -> plt.Figure:
+def plot_year(fig: plt.Figure, year: int, colors: Dict[datetime.date, str]):
     """
     Plot a complete year using given mapping of date to color.
     """
 
-    fig, axs = plt.subplots(4, 3)
+    axs = [fig.add_subplot(4, 3, i) for i in range(1, 13)]
 
     date_patches = []
     for i in range(0, 12):
         month = i + 1
-        date_patches.extend(plot_month(axs[i // 3, i % 3], year, month, colors))
+        date_patches.extend(plot_month(axs[i], year, month, colors))
 
     fig.suptitle(f"{year}", color="#999999", fontfamily="Lora", fontsize="xx-large", x=0.9, y=0.95, ha="right")
-    return fig
 
 
 def dark_foreground(c) -> bool:
