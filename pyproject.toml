@@ -12,6 +12,7 @@ orgparse = "^0.1.4"
 calmap = "^0.0.8"
 python-gnupg = "^0.4.6"
 pydash = "^4.9.0"
+PyQt5 = "^5.15.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.0.2"

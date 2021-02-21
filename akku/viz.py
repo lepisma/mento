@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 
 
-def plot_year(year: int, colors: Dict[datetime.date, str]):
+def plot_year(year: int, colors: Dict[datetime.date, str]) -> plt.Figure:
     """
     Plot a complete year using given mapping of date to color.
     """
@@ -21,7 +21,7 @@ def plot_year(year: int, colors: Dict[datetime.date, str]):
         date_patches.extend(plot_month(axs[i // 3, i % 3], year, month, colors))
 
     fig.suptitle(f"{year}", color="#999999", fontfamily="Lora", fontsize="xx-large", x=0.9, y=0.95, ha="right")
-    plt.show()
+    return fig
 
 
 def dark_foreground(c) -> bool:
