@@ -8,6 +8,16 @@ Akku is a program for tracking mental health. Here is the workflow:
 2. Parse entries from various sources using ~akku parse ...~.
 3. Visualize statistics using ~akku plot ...~.
 
-Here is an example mood plot (tracked via ~#mood(<int>)~):
+Here is an example mood plot (tracked via ~#mood(<int>)~) with journal entries.
 
 [[file:./screens/mood-plot.png]]
+
+Akku supports three kinds of Org entries at the moment.
+
+1. [[https://github.com/bastibe/org-journal][Org journal]] encrypted entries.
+2. Plain list items in org file whose body looks starts with inactive timestamp
+   like this =[2021-02-21 Sun 14:59] ...=
+3. [[http://www.orgzly.com/][Orgzly]] entries with =CREATED= property and heading text as =log=.
+
+You can track numerical metrics (like mood), episodes (like attacks), and much
+more. A correlation analysis mechanism is work in progress.
