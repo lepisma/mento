@@ -50,7 +50,7 @@ def plot_month(ax: Axes, year: int, month: int, colors: Dict[datetime.date, str]
 
     padding = 0.0
     for i, day in enumerate(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]):
-        ax.text(i + 1.5, 7 + 0.3, day, ha="center", color="#aaaaaa", fontfamily="Lora", fontsize="smaller")
+        ax.text(i + 1.5, 7 + 0.3, day, ha="center", color="#aaaaaa", fontfamily="Lora", fontsize="x-small")
 
     ax.text(8 - padding, 9 - padding, calendar.month_name[month], ha="right", va="top", color="#777777", fontfamily="Lora", fontstyle="italic", fontsize="medium")
 
