@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import orgpython
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QTextCursor, QTextDocument
 from PyQt5.QtWidgets import (QComboBox, QHBoxLayout, QSplitter, QTextEdit,
                              QToolButton, QVBoxLayout, QWidget)
 
@@ -57,7 +58,25 @@ class QJournal(QTextEdit):
         anything.
         """
 
-        print(date)
+        current_position = self.textCursor().position()
+        date_str = date.strftime("%b %d %Y")
+
+        cursor = self.textCursor()
+        cursor.movePosition(QTextCursor.End)
+        self.setTextCursor(cursor)
+
+        found = False
+        while self.find(date_str, QTextDocument.FindFlag.FindBackward):
+            found = True
+
+        if found:
+            pos = self.textCursor().position()
+        else:
+            pos = current_position
+
+        cursor = self.textCursor()
+        cursor.setPosition(pos)
+        self.setTextCursor(cursor)
 
 
 class QCalendar(FigureCanvasQTAgg):
