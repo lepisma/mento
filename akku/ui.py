@@ -1,10 +1,9 @@
 import datetime
-from typing import List
+from typing import Callable, List
 
 import dominate.tags as T
 import dominate.util
 import matplotlib.pyplot as plt
-import numpy as np
 import orgpython
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from PyQt5.QtCore import Qt
@@ -52,16 +51,35 @@ class QJournal(QTextEdit):
         for entry in entries:
             self.textCursor().insertHtml(self.format_entry(entry))
 
+    def scroll_to_date(self, date: datetime.date):
+        """
+        Scroll journal to entry on given `date`. If date is not present, don't do
+        anything.
+        """
+
+        print(date)
+
 
 class QCalendar(FigureCanvasQTAgg):
     """
     Calendar plotted using matplotlib.
     """
 
-    def __init__(self, entries):
+    def __init__(self, entries: List[Entry], journal_callback: Callable[[datetime.date], None]):
         self.fig = plt.figure()
         super().__init__(self.fig)
         self.entries = entries
+        self.fig.canvas.mpl_connect("pick_event", self.on_pick)
+        self.journal_callback = journal_callback
+
+    def on_pick(self, event):
+        """
+        Function called when a date is selected. We highlight the date and scroll
+        the journal to the given position.
+        """
+
+        rect = event.artist
+        self.journal_callback(rect._data["date"])
 
     def render(self, year: int, plot_type: str):
         self.fig.clear()
@@ -107,10 +125,10 @@ class QWindow(QWidget):
         self.year = datetime.datetime.now().year
         self.plot_type = "mood"
 
-        self.calendar = QCalendar(entries)
-
         self.journal = QJournal()
         self.journal.render(entries)
+
+        self.calendar = QCalendar(entries, self.journal.scroll_to_date)
 
         side_pane = QWidget()
         side_pane_layout = QVBoxLayout()
