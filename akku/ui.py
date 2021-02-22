@@ -141,7 +141,10 @@ class QWindow(QWidget):
         self.setWindowTitle("akku")
 
         layout = QHBoxLayout()
-        self.year = datetime.datetime.now().year
+        min_year = min([e.date for e in entries]).year
+        max_year = max([e.date for e in entries]).year
+
+        self.year = max_year
         self.plot_type = "mood"
 
         self.journal = QJournal()
@@ -163,13 +166,20 @@ class QWindow(QWidget):
         right_button.setArrowType(Qt.RightArrow)
         right_button.clicked.connect(self.right_click)
 
-        self.combo_box = QComboBox()
-        self.combo_box.addItems(["mood", "count", "polarity", "mentions"])
-        self.combo_box.activated.connect(self.combo_click)
+        years = [str(y) for y in range(min_year, max_year + 1)]
+        self.combo_year = QComboBox()
+        self.combo_year.addItems(years)
+        self.combo_year.activated.connect(self.combo_year_click)
+        self.refresh_combo_year()
+
+        self.combo_plot = QComboBox()
+        self.combo_plot.addItems(["mood", "count", "polarity", "mentions"])
+        self.combo_plot.activated.connect(self.combo_plot_click)
 
         controls_layout.addWidget(left_button)
         controls_layout.addWidget(right_button)
-        controls_layout.addWidget(self.combo_box)
+        controls_layout.addWidget(self.combo_year)
+        controls_layout.addWidget(self.combo_plot)
         controls.setLayout(controls_layout)
 
         side_pane_layout.addWidget(controls)
@@ -184,17 +194,26 @@ class QWindow(QWidget):
         self.setLayout(layout)
         self.refresh_calendar()
 
+    def refresh_combo_year(self):
+        self.combo_year.setCurrentIndex(self.combo_year.findText(str(self.year)))
+
     def refresh_calendar(self):
         self.calendar.render(self.year, self.plot_type)
 
     def left_click(self):
         self.year -= 1
         self.refresh_calendar()
+        self.refresh_combo_year()
 
     def right_click(self):
         self.year += 1
         self.refresh_calendar()
+        self.refresh_combo_year()
 
-    def combo_click(self):
-        self.plot_type = self.combo_box.currentText()
+    def combo_year_click(self):
+        self.year = int(self.combo_year.currentText())
+        self.refresh_calendar()
+
+    def combo_plot_click(self):
+        self.plot_type = self.combo_plot.currentText()
         self.refresh_calendar()
