@@ -58,7 +58,7 @@ def main():
     else:
         app = QApplication([])
 
-        with open(args["--output-file"], "rb") as fp:
+        with open(args["<entries-file>"], "rb") as fp:
             entries = sorted(pickle.load(fp), key=entry_dt)
 
         window = ui.QWindow(entries)
