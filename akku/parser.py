@@ -11,6 +11,23 @@ import orgparse
 from akku.types import Context, Entry, Person, Tracker
 
 
+def read_file(filepath: str) -> str:
+    """
+    Read file `filepath` and return string content. If the file is encrypted,
+    decrypt and read.
+    """
+
+    if filepath.endswith(".gpg"):
+        gpg = gnupg.GPG()
+
+        with open(filepath, "rb") as fp:
+            dec = gpg.decrypt_file(fp)
+            return str(dec)
+    else:
+        with open(filepath) as fp:
+            return fp.read()
+
+
 def parse_trackers(text: str) -> List[Tracker]:
     """
     Parser trackers in nomie format from the given body. A tracker without a
@@ -78,7 +95,7 @@ def parse_orgzly(filepath: str) -> List[Entry]:
     """
 
     entry_heading = "log"
-    root = orgparse.load(filepath)
+    root = orgparse.loads(read_file(filepath))
 
     valid_nodes = []
     for n in root[1:]:
@@ -139,7 +156,7 @@ def parse_list_journal(filepath: str) -> List[Entry]:
     Lists are kept directly under headings.
     """
 
-    root = orgparse.load(filepath)
+    root = orgparse.loads(read_file(filepath))
     entries = []
 
     for node in root[1:]:
