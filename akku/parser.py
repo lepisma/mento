@@ -147,6 +147,9 @@ def parse_list_journal_heading(text: str) -> List[Entry]:
                 accum = []
         accum.append(line)
 
+    if accum:
+        entry_texts.append("\n".join(accum))
+
     entries = [parse_list_journal_entry(t) for t in entry_texts]
     return [e for e in entries if e]
 
