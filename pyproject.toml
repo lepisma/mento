@@ -19,6 +19,7 @@ textblob = "^0.15.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.0.2"
+pytest-mypy = "^0.8.0"
 
 [tool.poetry.scripts]
 akku = "akku.cli:main"

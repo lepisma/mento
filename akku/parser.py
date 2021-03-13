@@ -24,8 +24,8 @@ def read_file(filepath: str) -> str:
             dec = gpg.decrypt_file(fp)
             return str(dec)
     else:
-        with open(filepath) as fp:
-            return fp.read()
+        with open(filepath) as fp:  # type: ignore
+            return fp.read()  # type: ignore
 
 
 def parse_trackers(text: str) -> List[Tracker]:
