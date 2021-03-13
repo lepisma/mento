@@ -8,8 +8,9 @@ import orgpython
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QTextCursor, QTextDocument
-from PyQt5.QtWidgets import (QComboBox, QHBoxLayout, QSplitter, QTextEdit,
-                             QToolButton, QVBoxLayout, QWidget)
+from PyQt5.QtWidgets import (QComboBox, QHBoxLayout, QMainWindow, QSplitter,
+                             QStatusBar, QTextEdit, QToolButton, QVBoxLayout,
+                             QWidget)
 
 import akku.stats as stats
 import akku.viz as viz
@@ -131,7 +132,7 @@ class QCalendar(FigureCanvasQTAgg):
         self.fig.canvas.draw_idle()
 
 
-class QWindow(QWidget):
+class QWindow(QMainWindow):
     """
     Main app window
     """
@@ -139,6 +140,9 @@ class QWindow(QWidget):
     def __init__(self, entries):
         super().__init__()
         self.setWindowTitle("akku")
+
+        widget = QWidget(self)
+        self.setCentralWidget(widget)
 
         layout = QHBoxLayout()
         min_year = min([e.date for e in entries]).year
@@ -191,7 +195,11 @@ class QWindow(QWidget):
         splitter.addWidget(side_pane)
 
         layout.addWidget(splitter)
-        self.setLayout(layout)
+        widget.setLayout(layout)
+
+        self.status_bar = QStatusBar()
+        self.setStatusBar(self.status_bar)
+
         self.refresh_calendar()
 
     def refresh_combo_year(self):
