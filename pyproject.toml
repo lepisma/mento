@@ -3,6 +3,7 @@ name = "akku"
 version = "1.3.4"
 description = "Personal tracker for mental health"
 authors = ["Abhinav Tushar <abhinav@lepisma.xyz>"]
+include = ["fonts/lora/*"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
