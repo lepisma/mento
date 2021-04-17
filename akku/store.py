@@ -33,21 +33,28 @@ class SQLiteStore:
         cur = self.con.cursor()
         return [entry_loads(it[0]) for it in cur.execute("SELECT data FROM entries")]
 
-    def refresh(self):
-        # TODO: Allow unforced refreshes
+    def refresh(self, force=False):
         cur = self.con.cursor()
 
-        # Deleting all items and re-parsing everything
-        cur.execute("DELETE FROM entries")
+        rows = cur.execute("SELECT id, type, path, config, cache_state FROM sources").fetchall()
 
-        sources = {}
-        for row in cur.execute("SELECT id, type, path, config FROM sources"):
-            sources[row[0]] = Source(SourceType[row[1]], row[2], row[3])
+        for row in rows:
+            s_id = row[0]
+            source = Source(SourceType[row[1]], row[2], row[3])
 
-        for s_id, source in sources.items():
-            entries = parse_source(source)
-            rows = [(entry_dumps(ent), s_id) for ent in entries]
-            cur.executemany("INSERT INTO entries (data, source_id) VALUES (?, ?)", rows)
+            stored_cache_state = row[4]
+            current_cache_state = calculate_cache_state(source)
+
+            if force or (stored_cache_state != current_cache_state):
+                print(f":: Refreshing source: {source.path}")
+                cur.execute("DELETE FROM entries WHERE source_id = ?", (s_id, ))
+                entries = parse_source(source)
+                cur.executemany(
+                    "INSERT INTO entries (data, source_id) VALUES (?, ?)",
+                    [(entry_dumps(ent), s_id) for ent in entries]
+                )
+
+            cur.execute("UPDATE sources SET cache_state = ? WHERE id = ?", (current_cache_state, s_id))
 
         self.con.commit()
 

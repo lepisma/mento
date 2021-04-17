@@ -2,8 +2,11 @@
 Akku
 
 Usage:
-  akku <database>
-  akku refresh <database>
+  akku <database> [(--no-refresh|--force-refresh)]
+
+Options:
+  --no-refresh                          If set, don't refresh before loading entries.
+  --force-refresh                       Force refresh all sources before loading entries.
 
 Arguments:
   <database>                            Database keeping entries and source information.
@@ -25,14 +28,17 @@ def main():
 
     store = SQLiteStore(args["<database>"])
 
-    if args["refresh"]:
+    if args["--force-refresh"]:
+        store.refresh(force=True)
+    elif args["--no-refresh"]:
+        pass
+    else:
         store.refresh()
 
-    else:
-        app = QApplication([])
-        entries = sorted(store.entries, key=entry_dt)
+    app = QApplication([])
+    entries = sorted(store.entries, key=entry_dt)
 
-        window = ui.QWindow(entries)
-        window.show()
+    window = ui.QWindow(entries)
+    window.show()
 
-        sys.exit(app.exec_())
+    sys.exit(app.exec_())
