@@ -11,20 +11,6 @@ all based on [[https://orgmode.org/][Org Mode]] files.
    like this =[2021-02-21 Sun 14:59] ...=
 3. [[http://www.orgzly.com/][Orgzly]] entries with =CREATED= property and heading text as =log=.
 
-For setting up, initialize a database by calling ~akku init ./database.db~. Then
-add sources manually in the database. You might want to use [[https://sqlitebrowser.org/][sqlitebrowser]] for
-this. Addition only needs specifying the following fields as of now for each
-source:
-
-1. Org Journal needs ~type~ set to ~ORG_JOURNAL~, and ~path~ set to directory path for
-   journal.
-2. Orgzly and Org list need ~type~ set to ~ORGZLY~ and ~ORG_LIST~ respectively. ~path~
-   points to the file path.
-
-Afterwards, call ~akku ./database.db~ for opening the program. While opening, the
-system will automatically refresh out of date sources and parse entries. You can
-also force refresh for all sources by using ~--force-refresh~ flag.
-
 Here is an example mood plot (tracked via ~#mood(<int>)~) with journal entries:
 
 [[file:./screens/mood-plot.png]]
@@ -35,3 +21,17 @@ And here are entry counts:
 
 You can track numerical metrics (like mood), episodes (like attacks), and much
 more. A correlation analysis mechanism is work in progress.
+
+** Usage
+For setting up akku, initialize a database by calling ~akku init ./database.db~.
+Then add sources manually in the database. You might want to use [[https://sqlitebrowser.org/][sqlitebrowser]]
+for this.
+
++ Org Journal needs ~type~ set to ~ORG_JOURNAL~, and ~path~ set to directory path for
+  journal.
++ Orgzly and Org list need ~type~ set to ~ORGZLY~ and ~ORG_LIST~ respectively. ~path~
+  points to the file path.
+
+Afterwards, call ~akku ./database.db~ for opening the program. Before opening, the
+program will automatically refresh out-of-date sources. You can also force
+refresh for all sources by using ~--force-refresh~ flag.
