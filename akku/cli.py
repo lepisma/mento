@@ -2,6 +2,7 @@
 Akku
 
 Usage:
+  akku init <database>
   akku <database> [(--no-refresh|--force-refresh)]
 
 Options:
@@ -9,6 +10,7 @@ Options:
   --force-refresh                       Force refresh all sources before loading entries.
 
 Arguments:
+  init                                  Initialize the database if not done already.
   <database>                            Database keeping entries and source information.
 """
 
@@ -27,6 +29,9 @@ def main():
     args = docopt(__doc__, version=__version__)
 
     store = SQLiteStore(args["<database>"])
+
+    if args["init"]:
+        sys.exit(0)
 
     if args["--force-refresh"]:
         store.refresh(force=True)
