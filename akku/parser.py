@@ -1,5 +1,6 @@
 import concurrent.futures
 import datetime
+import getpass
 import os
 import re
 from glob import glob
@@ -8,7 +9,19 @@ from typing import List, Optional
 import gnupg
 import orgparse
 
-from akku.types import Context, Entry, Person, Tracker
+from akku.types import Context, Entry, Person, Source, SourceType, Tracker
+
+
+def parse_source(source: Source) -> List[Entry]:
+    if source.source_type == SourceType.ORGZLY:
+        return parse_orgzly(source.path)
+    elif source.source_type == SourceType.ORG_LIST:
+        return parse_list_journal(source.path)
+    elif source.source_type == SourceType.ORG_JOURNAL:
+        passphrase = getpass.getpass("Passphrase for Org Journal: ")
+        return parse_org_journal(source.path, passphrase)
+    else:
+        raise TypeError("Wrong source type")
 
 
 def read_file(filepath: str) -> str:
