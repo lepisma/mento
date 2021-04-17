@@ -3,6 +3,18 @@ from typing import List
 
 from akku.parser import parse_source
 from akku.types import Entry, Source, SourceType, entry_dumps, entry_loads
+from akku.util import directory_hash, file_hash
+
+
+def calculate_cache_state(source: Source) -> str:
+    if source.source_type == SourceType.ORGZLY:
+        return file_hash(source.path)
+    elif source.source_type == SourceType.ORG_LIST:
+        return file_hash(source.path)
+    elif source.source_type == SourceType.ORG_JOURNAL:
+        return directory_hash(source.path)
+    else:
+        raise TypeError("Wrong source type")
 
 
 class SQLiteStore:
