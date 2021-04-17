@@ -2,9 +2,9 @@
 
 [[https://img.shields.io/github/v/tag/lepisma/akku.svg?style=flat-square]]
 
-Akku is a program for tracking mental health. It works by capturing notes with a
-format similar to [[https://github.com/open-nomie/nomie][nomie]] in various sources. As of now, there are three sources,
-all based on [[https://orgmode.org/][Org Mode]] files.
+Akku is a program for tracking mental health. It works by capturing notes in a
+format similar to [[https://github.com/open-nomie/nomie][nomie]] from various sources. Here is the current list of
+sources:
 
 1. [[https://github.com/bastibe/org-journal][Org journal]] encrypted entries.
 2. Plain list items in org file whose body looks starts with inactive timestamp
