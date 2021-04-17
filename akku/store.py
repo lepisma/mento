@@ -42,7 +42,7 @@ class SQLiteStore:
     def _init_db(self):
         cur = self.con.cursor()
 
-        cur.execute("CREATE TABLE sources (id INTEGER PRIMARY KEY, type, path, config)")
+        cur.execute("CREATE TABLE sources (id INTEGER PRIMARY KEY, type, path, config, cache_state)")
         cur.execute("CREATE TABLE entries (id INTEGER PRIMARY KEY, data, source_id, FOREIGN KEY (source_id) REFERENCES sources (id))")
 
         self.con.commit()
