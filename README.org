@@ -35,3 +35,6 @@ for this.
 Afterwards, call ~akku ./database.db~ for opening the program. Before opening, the
 program will automatically refresh out-of-date sources. You can also force
 refresh for all sources by using ~--force-refresh~ flag.
+
+You will also need [[https://fonts.google.com/specimen/Lora][Lora font]] for the tool. Till the time automatic installation
+is built, you can use [[https://github.com/lordgiotto/google-font-installer][this tool]] for installation.
