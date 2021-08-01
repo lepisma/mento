@@ -15,6 +15,10 @@ Here is an example mood plot (tracked via ~#mood(<int>)~) with journal entries:
 
 [[file:./screens/mood-plot.png]]
 
+Polar hourly plot of mood entries:
+
+[[file:./screens/mood-plot-polar.png]]
+
 And here are entry counts:
 
 [[file:./screens/counts.png]]
