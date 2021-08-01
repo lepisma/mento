@@ -5,7 +5,11 @@ from typing import Any, Callable, Dict, List, Tuple
 import matplotlib.colors
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.axes import Axes
+from pydash import py_
+
+from akku.types import Entry
 
 
 def color_transform(bounds: Tuple[Any, Any]) -> Callable[[Any], str]:
@@ -36,6 +40,63 @@ def plot_year(fig: plt.Figure, year: int, colors: Dict[datetime.date, str]):
         date_patches.extend(plot_month(axs[i], year, month, colors))
 
     fig.suptitle(f"{year}", color="#999999", fontfamily="Lora", fontsize="xx-large", x=0.9, y=0.95, ha="right")
+
+
+def plot_year_polar(fig: plt.Figure, year: int, entries: List[Entry]):
+    axs = [fig.add_subplot(4, 3, i, projection="polar") for i in range(1, 13)]
+
+    for i in range(0, 12):
+        month = i + 1
+        plot_month_polar(axs[i], year, month, entries, show_theta_labels=(month == 1))
+
+    fig.suptitle(f"{year}", color="#999999", fontfamily="Lora", fontsize="xx-large", x=0.9, y=0.95, ha="right")
+
+
+def plot_month_polar(ax: Axes, year: int, month: int, entries: List[Entry], show_theta_labels=True):
+    items = []
+    for e in entries:
+        if not e.time:
+            continue
+
+        if e.date.month != month:
+            continue
+
+        if e.date.year != year:
+            continue
+
+        mood_trackers = [t for t in e.trackers if t.name == "mood"]
+        if mood_trackers:
+            # Assuming only one mood track in an entry
+            r = mood_trackers[0].value
+            theta = 2 * np.pi * (e.time.hour * 60 + e.time.minute) / (24 * 60)
+            items.append((theta, r))
+
+    ct = color_transform((-2, 2))
+
+    ax.grid(True)
+    ax.axis("off")
+
+    ax.scatter([theta for theta, _ in items], [r + np.random.normal(scale=0.2) for _, r in items], c=[ct(r) for _, r in items], alpha=0.5)
+
+    ax.set_rlim(-10, 4)
+    ax.set_rmax(3)
+    ax.set_rmin(-10)
+    ax.set_rticks([])
+
+    hours = list(range(0, 24, 6))
+    rads = [2 * np.pi * (h / 24) for h in hours]
+
+    if show_theta_labels:
+        for r, h in zip(rads, hours):
+            label = f"{h:02}:00"
+            ax.text(r, 4, label, ha="center", va="center", color="#777777", fontfamily="Lora", fontstyle="italic", fontsize="medium")
+    else:
+        ax.vlines(rads, 1, 3, colors="#cccccc")
+
+    ax.set_theta_zero_location("N")
+    ax.set_theta_direction(-1)
+
+    ax.text(0.16 * 2 * np.pi, 13, calendar.month_name[month], ha="right", va="top", color="#777777", fontfamily="Lora", fontstyle="italic", fontsize="medium")
 
 
 def dark_foreground(c) -> bool:

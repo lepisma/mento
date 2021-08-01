@@ -109,26 +109,32 @@ class QCalendar(FigureCanvasQTAgg):
             ct = viz.color_transform((-1, 1))
             for dt, v in stats.aggregate_by_date(self.entries, stats.aggregate_mean_polarity).items():
                 colors[dt] = ct(v)
+            viz.plot_year(self.fig, year, colors)
 
         elif plot_type == "mood":
             ct = viz.color_transform((-2, 2))
             for dt, v in stats.aggregate_by_date(self.entries, stats.aggregate_mean_mood).items():
                 if v is not None:
                     colors[dt] = ct(v)
+            viz.plot_year(self.fig, year, colors)
 
         elif plot_type == "count":
             aggregated = stats.aggregate_by_date(self.entries, len)
             ct = viz.color_transform((0, max(aggregated.values())))
             for dt, v in aggregated.items():
                 colors[dt] = ct(v)
+            viz.plot_year(self.fig, year, colors)
 
         elif plot_type == "mentions":
             aggregated = stats.aggregate_by_date(self.entries, stats.aggregate_mentions)
             ct = viz.color_transform((0, max(aggregated.values())))
             for dt, v in aggregated.items():
                 colors[dt] = ct(v)
+            viz.plot_year(self.fig, year, colors)
 
-        viz.plot_year(self.fig, year, colors)
+        elif plot_type == "mood (hour)":
+            viz.plot_year_polar(self.fig, year, self.entries)
+
         self.fig.canvas.draw_idle()
 
 
@@ -177,7 +183,7 @@ class QWindow(QMainWindow):
         self.refresh_combo_year()
 
         self.combo_plot = QComboBox()
-        self.combo_plot.addItems(["mood", "count", "polarity", "mentions"])
+        self.combo_plot.addItems(["mood", "mood (hour)", "count", "polarity", "mentions"])
         self.combo_plot.activated.connect(self.combo_plot_click)
 
         controls_layout.addWidget(left_button)
