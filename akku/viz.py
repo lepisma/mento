@@ -91,7 +91,7 @@ def plot_month_polar(ax: Axes, year: int, month: int, entries: List[Entry], show
             label = f"{h:02}:00"
             ax.text(r, 4, label, ha="center", va="center", color="#777777", fontfamily="Lora", fontstyle="italic", fontsize="medium")
     else:
-        ax.vlines(rads, 1, 3, colors="#cccccc")
+        ax.vlines(rads, 2, 3, colors="#cccccc")
 
     ax.set_theta_zero_location("N")
     ax.set_theta_direction(-1)
