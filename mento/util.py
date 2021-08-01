@@ -3,7 +3,7 @@ import hashlib
 import os
 from glob import glob
 
-from akku.types import Entry
+from mento.types import Entry
 
 
 def file_hash(filepath: str) -> str:

@@ -1,9 +1,9 @@
 """
-Akku
+Mento
 
 Usage:
-  akku init <database>
-  akku <database> [(--no-refresh|--force-refresh)]
+  mento init <database>
+  mento <database> [(--no-refresh|--force-refresh)]
 
 Options:
   --no-refresh                          If set, don't refresh before loading entries.
@@ -19,10 +19,10 @@ import sys
 from docopt import docopt
 from PyQt5.QtWidgets import QApplication
 
-import akku.ui as ui
-from akku import __version__
-from akku.store import SQLiteStore
-from akku.util import entry_dt
+import mento.ui as ui
+from mento import __version__
+from mento.store import SQLiteStore
+from mento.util import entry_dt
 
 
 def main():

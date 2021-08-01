@@ -12,9 +12,9 @@ from PyQt5.QtWidgets import (QComboBox, QHBoxLayout, QMainWindow, QSplitter,
                              QStatusBar, QTextEdit, QToolButton, QVBoxLayout,
                              QWidget)
 
-import akku.stats as stats
-import akku.viz as viz
-from akku.types import Entry
+import mento.stats as stats
+import mento.viz as viz
+from mento.types import Entry
 
 
 class QJournal(QTextEdit):
@@ -145,7 +145,7 @@ class QWindow(QMainWindow):
 
     def __init__(self, entries):
         super().__init__()
-        self.setWindowTitle("akku")
+        self.setWindowTitle("mento")
 
         widget = QWidget(self)
         self.setCentralWidget(widget)

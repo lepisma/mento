@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "akku"
+name = "mento"
 version = "3.0.0"
 description = "Personal tracker for mental health"
 authors = ["Abhinav Tushar <abhinav@lepisma.xyz>"]
@@ -22,7 +22,7 @@ pytest = "^6.0.2"
 pytest-mypy = "^0.8.0"
 
 [tool.poetry.scripts]
-akku = "akku.cli:main"
+mento = "mento.cli:main"
 
 [build-system]
 requires = ["poetry>=0.12"]

@@ -1,9 +1,9 @@
 import sqlite3
 from typing import List
 
-from akku.parser import parse_source
-from akku.types import Entry, Source, SourceType, entry_dumps, entry_loads
-from akku.util import directory_hash, file_hash
+from mento.parser import parse_source
+from mento.types import Entry, Source, SourceType, entry_dumps, entry_loads
+from mento.util import directory_hash, file_hash
 
 
 def calculate_cache_state(source: Source) -> str:

@@ -1,10 +1,10 @@
-#+TITLE: akku
+#+TITLE: mento
 
-[[https://img.shields.io/github/v/tag/lepisma/akku.svg?style=flat-square]]
+[[https://img.shields.io/github/v/tag/lepisma/mento.svg?style=flat-square]]
 
-Akku is a program for tracking mental health. It works by capturing notes in a
-format similar to [[https://github.com/open-nomie/nomie][nomie]] from various sources. Here is the current list of
-sources:
+Mento is a personal program for tracking mental health. It works by capturing
+notes in a format similar to [[https://github.com/open-nomie/nomie][nomie]] from various Org Mode sources. Here is the
+current list of sources:
 
 1. [[https://github.com/bastibe/org-journal][Org journal]] encrypted entries.
 2. Plain list items in org file whose body starts with inactive timestamp like
@@ -27,7 +27,7 @@ You can track numerical metrics (like mood), episodes (like attacks), and much
 more. A correlation analysis mechanism is work in progress.
 
 ** Usage
-For setting up akku, initialize a database by calling ~akku init ./database.db~.
+For setting up mento, initialize a database by calling ~mento init ./database.db~.
 Then add sources manually in the database. You might want to use [[https://sqlitebrowser.org/][sqlitebrowser]]
 for this.
 
@@ -36,7 +36,7 @@ for this.
 + Orgzly and Org list need ~type~ set to ~ORGZLY~ and ~ORG_LIST~ respectively. ~path~
   points to the file path.
 
-Afterwards, call ~akku ./database.db~ for opening the program. Before opening, the
+Afterwards, call ~mento ./database.db~ for opening the program. Before opening, the
 program will automatically refresh out-of-date sources. You can also force
 refresh for all sources by using ~--force-refresh~ flag.
 

@@ -1,7 +1,7 @@
 import pytest
-from akku.parser import (parse_contexts, parse_list_journal_heading,
-                         parse_people, parse_trackers)
-from akku.types import Context, Person, Tracker
+from mento.parser import (parse_contexts, parse_list_journal_heading,
+                          parse_people, parse_trackers)
+from mento.types import Context, Person, Tracker
 
 
 @pytest.mark.parametrize("text, output", [

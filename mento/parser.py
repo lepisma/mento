@@ -9,7 +9,7 @@ from typing import List, Optional
 import gnupg
 import orgparse
 
-from akku.types import Context, Entry, Person, Source, SourceType, Tracker
+from mento.types import Context, Entry, Person, Source, SourceType, Tracker
 
 
 def parse_source(source: Source) -> List[Entry]:

@@ -9,7 +9,7 @@ import numpy as np
 from matplotlib.axes import Axes
 from pydash import py_
 
-from akku.types import Entry
+from mento.types import Entry
 
 
 def color_transform(bounds: Tuple[Any, Any]) -> Callable[[Any], str]:

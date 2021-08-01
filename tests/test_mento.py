@@ -1,4 +1,4 @@
-from akku import __version__
+from mento import __version__
 
 
 def test_version():

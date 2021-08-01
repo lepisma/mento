@@ -5,7 +5,7 @@ from typing import Any, Callable, Dict, List, Optional
 from pydash import py_
 from textblob import TextBlob
 
-from akku.types import Entry
+from mento.types import Entry
 
 
 def aggregate_mean_mood(entries: List[Entry]) -> Optional[float]:
