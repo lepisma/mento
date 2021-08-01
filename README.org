@@ -7,8 +7,8 @@ format similar to [[https://github.com/open-nomie/nomie][nomie]] from various so
 sources:
 
 1. [[https://github.com/bastibe/org-journal][Org journal]] encrypted entries.
-2. Plain list items in org file whose body looks starts with inactive timestamp
-   like this =[2021-02-21 Sun 14:59] ...=
+2. Plain list items in org file whose body starts with inactive timestamp like
+   this =[2021-02-21 Sun 14:59] ...=
 3. [[http://www.orgzly.com/][Orgzly]] entries with =CREATED= property and heading text as =log=.
 
 Here is an example mood plot (tracked via ~#mood(<int>)~) with journal entries:
