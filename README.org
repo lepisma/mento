@@ -1,6 +1,6 @@
 #+TITLE: mento
 
-[[https://img.shields.io/github/v/tag/lepisma/mento.svg?style=flat-square]]
+[[https://img.shields.io/github/v/tag/lepisma/mento.svg?style=flat-square]] [[https://img.shields.io/pypi/v/mento.svg?style=flat-square]]
 
 Mento is a personal program for tracking mental health. It works by capturing
 notes in a format similar to [[https://github.com/open-nomie/nomie][nomie]] from various Org Mode sources. Here is the
@@ -27,9 +27,9 @@ You can track numerical metrics (like mood), episodes (like attacks), and much
 more. A correlation analysis mechanism is work in progress.
 
 ** Usage
-For setting up mento, initialize a database by calling ~mento init ./database.db~.
-Then add sources manually in the database. You might want to use [[https://sqlitebrowser.org/][sqlitebrowser]]
-for this.
+Install using ~pip install mento~. Then initialize a database by calling ~mento
+init ./database.db~. Then add sources manually in the database. You might want to
+use [[https://sqlitebrowser.org/][sqlitebrowser]] for this.
 
 + Org Journal needs ~type~ set to ~ORG_JOURNAL~, and ~path~ set to directory path for
   journal.

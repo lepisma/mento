@@ -2,6 +2,8 @@
 name = "mento"
 version = "3.0.0"
 description = "Personal tracker for mental health"
+homepage = "https://github.com/lepisma/mento"
+repository = "https://github.com/lepisma/mento"
 authors = ["Abhinav Tushar <abhinav@lepisma.xyz>"]
 
 [tool.poetry.dependencies]
